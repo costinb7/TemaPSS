@@ -9,18 +9,21 @@ import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
 
 public class MainApp {
-	private static final Logger LOGGER = Logger.getLogger(MainApp.class.getName());
+	private static final Logger log = Logger.getLogger(MainApp.class.getName());
 
 	/**
 	Watch for files creation in the specified path
 	*/
 	public static void watchDirectoryPath(Path path) {
+
         try {
             Boolean isFolder = (Boolean) Files.getAttribute(path, "basic:isDirectory", NOFOLLOW_LINKS);
             if (!isFolder) {
@@ -31,7 +34,7 @@ public class MainApp {
         	throw new IllegalArgumentException("Path: '" + path + "' does not exist");
         }
 
-        LOGGER.info("Watching path: " + path);
+        log.info("Watching path: " + path);
 
         FileSystem fs = path.getFileSystem();
 
@@ -65,9 +68,16 @@ public class MainApp {
 
 
 	public static void main(String[] args) throws IOException{
-		OrdersDAO orders = new OrdersDAO();
+
+		// Set the logging level
+		ConsoleHandler ch = new ConsoleHandler();
+        ch.setLevel(Level.FINEST);
+        log.addHandler(ch);
+        log.setLevel(Level.FINEST);
+
+		OrdersDAO orders = new OrdersDAO("orders.xml");
 		try {
-			orders.fct2();
+			orders.readOrders();
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

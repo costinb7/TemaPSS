@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -10,8 +11,19 @@ import javax.xml.bind.Unmarshaller;
 
 
 public class OrdersDAO {
-	private static final String BOOKSTORE_XML = "./orders.xml";
-	public void fct1() throws JAXBException{
+	private static final Logger log = Logger.getLogger(MainApp.class.getName());
+	private final String ORDERS_XML;
+	private Orders orders;
+
+	public OrdersDAO(String oRDERS_XML) {
+		super();
+		ORDERS_XML = oRDERS_XML;
+	}
+
+	/**
+	A test method that creates some orders
+	*/
+	public void testCreateOrders() throws JAXBException{
 		Product product1 =  new Product("a", "b", "c", "d");
 		Product product2 =  new Product("as", "fb", "cf", "dg");
 		ArrayList<Product> productList = new ArrayList<Product>();
@@ -33,15 +45,17 @@ public class OrdersDAO {
 
 	    // Write to System.out
 	    m.marshal(orders1, System.out);
-	    m.marshal(orders1, new File(BOOKSTORE_XML));
+	    m.marshal(orders1, new File(ORDERS_XML));
 
 	}
 
-	public void fct2() throws JAXBException, FileNotFoundException{
+	/**
+	Read orders from the xml file
+	*/
+	public void readOrders() throws JAXBException, FileNotFoundException{
 		JAXBContext context = JAXBContext.newInstance(Orders.class);
 		Unmarshaller um = context.createUnmarshaller();
-	    Orders orders = (Orders) um.unmarshal(new FileReader(BOOKSTORE_XML));
-	    System.out.println(orders);
-
+	    orders = (Orders) um.unmarshal(new FileReader(ORDERS_XML));
+	    log.fine("Information red from file " + ORDERS_XML + " :\n" + orders.toString());
 	}
 }
