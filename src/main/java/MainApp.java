@@ -78,6 +78,8 @@ public class MainApp {
 		OrdersDAO orders = new OrdersDAO("orders.xml");
 		try {
 			orders.readOrders();
+			orders.transformFromProductsToOutputProducts();
+			orders.writeProducts();
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
