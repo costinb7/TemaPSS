@@ -11,22 +11,24 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.logging.Logger;
 
+import javax.xml.bind.JAXBException;
+
 
 public class MainApp {
 	private static final Logger LOGGER = Logger.getLogger(MainApp.class.getName());
 
+	/**
+	Watch for files creation in the specified path
+	*/
 	public static void watchDirectoryPath(Path path) {
         try {
-            Boolean isFolder = (Boolean) Files.getAttribute(path,
-                    "basic:isDirectory", NOFOLLOW_LINKS);
+            Boolean isFolder = (Boolean) Files.getAttribute(path, "basic:isDirectory", NOFOLLOW_LINKS);
             if (!isFolder) {
-                throw new IllegalArgumentException("Path: '" + path
-                        + "' is not a folder");
+                throw new IllegalArgumentException("Path: '" + path + "' is not a folder");
             }
         } catch (IOException ioe) {
             // Folder does not exists
-        	throw new IllegalArgumentException("Path: '" + path
-                    + "' does not exist");
+        	throw new IllegalArgumentException("Path: '" + path + "' does not exist");
         }
 
         LOGGER.info("Watching path: " + path);
@@ -43,7 +45,8 @@ public class MainApp {
                 key = service.take();
 
                 for (WatchEvent<?> watchEvent : key.pollEvents()) {
-                        Path newPath = ((WatchEvent<Path>) watchEvent).context();
+                        @SuppressWarnings("unchecked")
+						Path newPath = ((WatchEvent<Path>) watchEvent).context();
                         System.out.println("New path created: " + newPath);
                 }
 
@@ -62,9 +65,17 @@ public class MainApp {
 
 
 	public static void main(String[] args) throws IOException{
-		File dir = new File("orders");
+		OrdersDAO orders = new OrdersDAO();
+		try {
+			orders.fct2();
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (args.length < 1)
+			throw new IllegalArgumentException("No orders directory specified");
+		File dir = new File(args[0]);
         watchDirectoryPath(dir.toPath());
-
 	}
 
 }
