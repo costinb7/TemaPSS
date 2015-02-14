@@ -14,12 +14,16 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.swing.plaf.metal.MetalIconFactory.FileIcon16;
 import javax.xml.bind.JAXBException;
 
 
 public class MainApp {
 	private static final Logger log = Logger.getLogger(MainApp.class.getName());
+	private static String fileIndex;
 
 	/**
 	Watch for files creation in the specified path
@@ -54,8 +58,8 @@ public class MainApp {
                         String foundFile = newPath.toString();
                         if (foundFile.matches("orders\\d\\d.xml")){
                         	log.info("New orders file found: " + foundFile);
-                        }
-                        
+                        	processNewFile(path + File.separator + foundFile);
+                        }                 
                 }
 
                 if (!key.reset()) {
@@ -71,12 +75,16 @@ public class MainApp {
     }
 	
 	public static void processNewFile(String path){
+		Pattern p = Pattern.compile("\\d+");
+    	Matcher m = p.matcher(path);
+    	m.find();
+    	fileIndex = m.group();
 		OrdersDAO orders = new OrdersDAO(path);
 		try {
 			//orders.testCreateOrders();
 			orders.readOrders();
 			orders.transformFromProductsToOutputProducts();
-			orders.writeProducts();
+			orders.writeProducts(fileIndex);
 		} catch (JAXBException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {

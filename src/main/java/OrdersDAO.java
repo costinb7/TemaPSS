@@ -13,6 +13,8 @@ import javax.xml.bind.Unmarshaller;
 
 
 public class OrdersDAO {
+	public static final String outputFolderName = "results";
+	
 	private static final Logger log = Logger.getLogger(MainApp.class.getName());
 	private final String ORDERS_XML;
 	private Orders orders;
@@ -48,7 +50,6 @@ public class OrdersDAO {
 
 	    // Write to System.out
 	    m.marshal(orders1, System.out);
-	    m.marshal(orders1, new File(ORDERS_XML));
 
 	}
 
@@ -103,17 +104,25 @@ public class OrdersDAO {
 		}
 	}
 	
-	public void writeProducts() throws JAXBException{
+	private void createOuputFolder(){
+		File outputFolder = new File(outputFolderName);
+		if (!outputFolder.exists()) {
+		    log.info("creating directory: " + outputFolderName);
+		    outputFolder.mkdir();
+		}
+	}
+	
+	public void writeProducts(String fileIndex) throws JAXBException{
 		// create JAXB context and instantiate marshaller
 	    JAXBContext context = JAXBContext.newInstance(Products.class);
 	    Marshaller m = context.createMarshaller();
 	    m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
 	    // Write to System.out
+	    createOuputFolder();
 	    for (String key: mapOrders.keySet()){
-	    	System.out.println(key + "\n");
-	    	m.marshal(mapOrders.get(key), System.out);
-	    	m.marshal(mapOrders.get(key), new File("products.xml") );
+	    	String fileName = key + fileIndex + ".xml";
+	    	m.marshal(mapOrders.get(key), new File(outputFolderName + File.separator + fileName));
 	    }
 	    
 	}
