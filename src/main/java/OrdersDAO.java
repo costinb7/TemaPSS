@@ -27,8 +27,8 @@ public class OrdersDAO {
 	A test method that creates some orders
 	*/
 	public void testCreateOrders() throws JAXBException{
-		Product product1 =  new Product("a", "b", "c", "d");
-		Product product2 =  new Product("as", "fb", "cf", "dg");
+		Product product1 =  new Product("a", "b", new Price("usd", "100"), "d");
+		Product product2 =  new Product("as", "fb", new Price("usd", "103"), "dg");
 		ArrayList<Product> productList = new ArrayList<Product>();
 		productList.add(product1);
 		productList.add(product2);
@@ -66,8 +66,8 @@ public class OrdersDAO {
 	A test method that creates some products
 	*/
 	public void testCreateProducts() throws JAXBException{
-		OutputProduct product1 =  new OutputProduct("a", "b", "c", "d");
-		OutputProduct product2 =  new OutputProduct("as", "fb", "cf", "dg");
+		OutputProduct product1 =  new OutputProduct("a", "b", new Price("usd", "160"), "d");
+		OutputProduct product2 =  new OutputProduct("as", "fb", new Price("usd", "109"), "dg");
 		ArrayList<OutputProduct> productList = new ArrayList<OutputProduct>();
 		productList.add(product1);
 		productList.add(product2);

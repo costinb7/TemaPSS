@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Product {
 	private String description;
 	private String gtin;
-	public Product(String description, String gtin, String price,
+	public Product(String description, String gtin, Price price,
 			String supplier) {
 		super();
 		this.description = description;
@@ -19,7 +19,7 @@ public class Product {
 	public Product() {
 		super();
 	}
-	private String price;
+	private Price price;
 	private String supplier;
 	public String getDescription() {
 		return description;
@@ -38,10 +38,10 @@ public class Product {
 	public void setGtin(String gtin) {
 		this.gtin = gtin;
 	}
-	public String getPrice() {
+	public Price getPrice() {
 		return price;
 	}
-	public void setPrice(String price) {
+	public void setPrice(Price price) {
 		this.price = price;
 	}
 	public String getSupplier() {
