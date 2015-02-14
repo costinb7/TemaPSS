@@ -1,3 +1,4 @@
+package main;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -13,18 +14,25 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import entities.Order;
+import entities.Orders;
+import entities.OutputProduct;
+import entities.Price;
+import entities.Product;
+import entities.Products;
+
 
 public class OrdersDAO {
 	public static final String outputFolderName = "results";
 	
 	private static final Logger log = Logger.getLogger(MainApp.class.getName());
-	private final String ORDERS_XML;
+	private final String orders_xml;
 	private Orders orders;
 	private Map<String, Products> mapOrders = new HashMap<String, Products>();
 
-	public OrdersDAO(String oRDERS_XML) {
+	public OrdersDAO(String orders_xml) {
 		super();
-		ORDERS_XML = oRDERS_XML;
+		this.orders_xml = orders_xml;
 	}
 
 	/**
@@ -61,8 +69,8 @@ public class OrdersDAO {
 	public void readOrders() throws JAXBException, FileNotFoundException{
 		JAXBContext context = JAXBContext.newInstance(Orders.class);
 		Unmarshaller um = context.createUnmarshaller();
-	    orders = (Orders) um.unmarshal(new FileReader(ORDERS_XML));
-	    log.fine("Information red from file " + ORDERS_XML + " :\n" + orders.toString());
+	    orders = (Orders) um.unmarshal(new FileReader(orders_xml));
+	    log.fine("Informations red from file " + orders_xml + " :\n" + orders.toString());
 	}
 	
 	/**
@@ -86,6 +94,9 @@ public class OrdersDAO {
 	    m.marshal(products, System.out);
 	}
 	
+	/**
+	Transform from Products to OutputProducts
+	*/
 	public void transformFromProductsToOutputProducts(){
 		for (Order order: orders.getOrderList()){
 			for (Product product: order.getProductList()){
@@ -106,6 +117,9 @@ public class OrdersDAO {
 		}
 	}
 	
+	/**
+	Creates the output folders if it doesn't exist
+	*/
 	private void createOuputFolder(){
 		File outputFolder = new File(outputFolderName);
 		if (!outputFolder.exists()) {
@@ -114,6 +128,9 @@ public class OrdersDAO {
 		}
 	}
 	
+	/**
+	Sort the products
+	*/
 	private void sort(Products products){
 		Collections.sort(products.getProductList(), new Comparator<OutputProduct>() {
 	        @Override public int compare(OutputProduct p1, OutputProduct p2) {
@@ -126,13 +143,15 @@ public class OrdersDAO {
 		});
 	}
 	
+	/**
+	Write the result products to the xml files
+	*/
 	public void writeProducts(String fileIndex) throws JAXBException{
 		// create JAXB context and instantiate marshaller
 	    JAXBContext context = JAXBContext.newInstance(Products.class);
 	    Marshaller m = context.createMarshaller();
 	    m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-	    // Write to System.out
 	    createOuputFolder();
 	    for (String key: mapOrders.keySet()){
 	    	String fileName = key + fileIndex + ".xml";
@@ -141,6 +160,5 @@ public class OrdersDAO {
 	    	log.info("Create result file: " + resultFile);
 	    	m.marshal(mapOrders.get(key), new File(resultFile));
 	    }
-	    
 	}
 }

@@ -1,3 +1,4 @@
+package entities;
 import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,7 +14,6 @@ public class Products {
 	private ArrayList<OutputProduct> productList = new ArrayList<OutputProduct>();
 
 	public Products() {
-		super();
 	}
 	
 	public void add(OutputProduct product){

@@ -1,3 +1,4 @@
+package entities;
 import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -12,7 +13,6 @@ public class Orders {
 	private ArrayList<Order> orderList;
 
 	public Orders() {
-		super();
 	}
 
 	public ArrayList<Order> getOrderList() {
@@ -27,8 +27,4 @@ public class Orders {
 	public String toString() {
 		return "Orders [orderList=" + orderList + "]";
 	}
-
-
-
-
 }

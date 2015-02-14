@@ -1,3 +1,4 @@
+package main;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 
@@ -19,7 +20,9 @@ import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBException;
 
-
+/**
+The main class
+*/
 public class MainApp {
 	private static final Logger log = Logger.getLogger(MainApp.class.getName());
 	private static String fileIndex;
@@ -70,6 +73,9 @@ public class MainApp {
         }
     }
 	
+	/**
+	Parse the new file specified in path and creates the result files for it
+	*/
 	public static void processNewFile(String path){
 		Pattern p = Pattern.compile("\\d+");
     	Matcher m = p.matcher(path);
@@ -87,10 +93,8 @@ public class MainApp {
 		}
 	}
 
-
 	public static void main(String[] args) throws IOException{
-
-		// Set the logging level
+		// Set the logging level to ALL
 		log.setLevel(Level.ALL);
 		for(Handler h : log.getParent().getHandlers()){
 		    if(h instanceof ConsoleHandler){
