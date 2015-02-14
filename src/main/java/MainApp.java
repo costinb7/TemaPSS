@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.plaf.metal.MetalIconFactory.FileIcon16;
 import javax.xml.bind.JAXBException;
 
 
@@ -29,7 +28,6 @@ public class MainApp {
 	Watch for files creation in the specified path
 	*/
 	public static void watchDirectoryPath(Path path) {
-
         try {
             Boolean isFolder = (Boolean) Files.getAttribute(path, "basic:isDirectory", NOFOLLOW_LINKS);
             if (!isFolder) {
@@ -61,12 +59,10 @@ public class MainApp {
                         	processNewFile(path + File.separator + foundFile);
                         }                 
                 }
-
                 if (!key.reset()) {
                     break; // loop
                 }
             }
-
         } catch (IOException ioe) {
             ioe.printStackTrace();
         } catch (InterruptedException ie) {
@@ -81,7 +77,6 @@ public class MainApp {
     	fileIndex = m.group();
 		OrdersDAO orders = new OrdersDAO(path);
 		try {
-			//orders.testCreateOrders();
 			orders.readOrders();
 			orders.transformFromProductsToOutputProducts();
 			orders.writeProducts(fileIndex);

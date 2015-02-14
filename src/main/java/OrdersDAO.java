@@ -2,6 +2,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -67,8 +69,8 @@ public class OrdersDAO {
 	A test method that creates some products
 	*/
 	public void testCreateProducts() throws JAXBException{
-		OutputProduct product1 =  new OutputProduct("a", "b", new Price("usd", "160"), "d");
-		OutputProduct product2 =  new OutputProduct("as", "fb", new Price("usd", "109"), "dg");
+		OutputProduct product1 =  new OutputProduct("a", "b", "1", new Price("usd", "160"), "d");
+		OutputProduct product2 =  new OutputProduct("as", "fb", "2", new Price("usd", "109"), "dg");
 		ArrayList<OutputProduct> productList = new ArrayList<OutputProduct>();
 		productList.add(product1);
 		productList.add(product2);
@@ -89,7 +91,7 @@ public class OrdersDAO {
 			for (Product product: order.getProductList()){
 				if (!mapOrders.containsKey(product.getSupplier())) {
 					OutputProduct newProduct = new OutputProduct(product.getDescription(),
-							product.getGtin(), product.getPrice(), order.getID());
+							product.getGtin(), order.getCreated(), product.getPrice(), order.getID());
 					Products products = new Products();
 					products.add(newProduct);
 					mapOrders.put(product.getSupplier(), products);
@@ -97,7 +99,7 @@ public class OrdersDAO {
 				else {
 					Products products = mapOrders.get(product.getSupplier());
 					OutputProduct newProduct = new OutputProduct(product.getDescription(),
-							product.getGtin(), product.getPrice(), order.getID());
+							product.getGtin(), order.getCreated(), product.getPrice(), order.getID());
 					products.add(newProduct);
 				}
 			}
@@ -112,6 +114,18 @@ public class OrdersDAO {
 		}
 	}
 	
+	private void sort(Products products){
+		Collections.sort(products.getProductList(), new Comparator<OutputProduct>() {
+	        @Override public int compare(OutputProduct p1, OutputProduct p2) {
+	        	if (p1.getTimestamp() !=  p2.getTimestamp())
+	        		return p2.getTimestamp().compareTo(p1.getTimestamp());
+	        	else 
+	        		return  (int) (Float.parseFloat(p2.getPrice().getPrice()) -  Float.parseFloat(p1.getPrice().getPrice()));
+	        		
+	        }
+		});
+	}
+	
 	public void writeProducts(String fileIndex) throws JAXBException{
 		// create JAXB context and instantiate marshaller
 	    JAXBContext context = JAXBContext.newInstance(Products.class);
@@ -122,7 +136,10 @@ public class OrdersDAO {
 	    createOuputFolder();
 	    for (String key: mapOrders.keySet()){
 	    	String fileName = key + fileIndex + ".xml";
-	    	m.marshal(mapOrders.get(key), new File(outputFolderName + File.separator + fileName));
+	    	sort(mapOrders.get(key));
+	    	String resultFile = outputFolderName + File.separator + fileName;
+	    	log.info("Create result file: " + resultFile);
+	    	m.marshal(mapOrders.get(key), new File(resultFile));
 	    }
 	    
 	}

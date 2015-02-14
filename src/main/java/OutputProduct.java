@@ -1,6 +1,7 @@
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 
 @XmlRootElement(name = "product")
@@ -8,11 +9,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class OutputProduct {
 	private String description;
 	private String gtin;
-	public OutputProduct(String description, String gtin, Price price,
-			String orderid) {
+	@XmlTransient
+	private String timestamp;
+	
+	public String getTimestamp() {
+		return timestamp;
+	}
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
+	}
+	public OutputProduct(String description, String gtin, String timestamp,
+			Price price, String orderid) {
 		super();
 		this.description = description;
 		this.gtin = gtin;
+		this.timestamp = timestamp;
 		this.price = price;
 		this.orderid = orderid;
 	}
