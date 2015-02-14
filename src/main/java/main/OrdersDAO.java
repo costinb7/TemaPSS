@@ -36,34 +36,6 @@ public class OrdersDAO {
 	}
 
 	/**
-	A test method that creates some orders
-	*/
-	public void testCreateOrders() throws JAXBException{
-		Product product1 =  new Product("a", "b", new Price("usd", "100"), "d");
-		Product product2 =  new Product("as", "fb", new Price("usd", "103"), "dg");
-		ArrayList<Product> productList = new ArrayList<Product>();
-		productList.add(product1);
-		productList.add(product2);
-		Order order1 = new Order();
-		order1.setProductList(productList);
-		order1.setCreated("Aaaa");
-		order1.setID("ID1");
-		ArrayList<Order> orderList = new ArrayList<Order>();
-		orderList.add(order1);
-		Orders orders1 = new Orders();
-		orders1.setOrderList(orderList);
-
-		// create JAXB context and instantiate marshaller
-	    JAXBContext context = JAXBContext.newInstance(Orders.class);
-	    Marshaller m = context.createMarshaller();
-	    m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-	    // Write to System.out
-	    m.marshal(orders1, System.out);
-
-	}
-
-	/**
 	Read orders from the xml file
 	*/
 	public void readOrders() throws JAXBException, FileNotFoundException{
@@ -71,27 +43,6 @@ public class OrdersDAO {
 		Unmarshaller um = context.createUnmarshaller();
 	    orders = (Orders) um.unmarshal(new FileReader(orders_xml));
 	    log.fine("Informations red from file " + orders_xml + " :\n" + orders.toString());
-	}
-	
-	/**
-	A test method that creates some products
-	*/
-	public void testCreateProducts() throws JAXBException{
-		OutputProduct product1 =  new OutputProduct("a", "b", "1", new Price("usd", "160"), "d");
-		OutputProduct product2 =  new OutputProduct("as", "fb", "2", new Price("usd", "109"), "dg");
-		ArrayList<OutputProduct> productList = new ArrayList<OutputProduct>();
-		productList.add(product1);
-		productList.add(product2);
-		Products products = new Products();
-		products.setProductList(productList);
-
-		// create JAXB context and instantiate marshaller
-	    JAXBContext context = JAXBContext.newInstance(Products.class);
-	    Marshaller m = context.createMarshaller();
-	    m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-	    // Write to System.out
-	    m.marshal(products, System.out);
 	}
 	
 	/**
@@ -160,5 +111,57 @@ public class OrdersDAO {
 	    	log.info("Create result file: " + resultFile);
 	    	m.marshal(mapOrders.get(key), new File(resultFile));
 	    }
+	}
+	
+	/***********************************************************************
+	 * Test methods
+	***********************************************************************/
+	
+	/**
+	A test method that creates some orders
+	*/
+	public void testCreateOrders() throws JAXBException{
+		Product product1 =  new Product("a", "b", new Price("usd", "100"), "d");
+		Product product2 =  new Product("as", "fb", new Price("usd", "103"), "dg");
+		ArrayList<Product> productList = new ArrayList<Product>();
+		productList.add(product1);
+		productList.add(product2);
+		Order order1 = new Order();
+		order1.setProductList(productList);
+		order1.setCreated("Aaaa");
+		order1.setID("ID1");
+		ArrayList<Order> orderList = new ArrayList<Order>();
+		orderList.add(order1);
+		Orders orders1 = new Orders();
+		orders1.setOrderList(orderList);
+
+		// create JAXB context and instantiate marshaller
+	    JAXBContext context = JAXBContext.newInstance(Orders.class);
+	    Marshaller m = context.createMarshaller();
+	    m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+	    // Write to System.out
+	    m.marshal(orders1, System.out);
+	}
+	
+	/**
+	A test method that creates some products
+	*/
+	public void testCreateProducts() throws JAXBException{
+		OutputProduct product1 =  new OutputProduct("a", "b", "1", new Price("usd", "160"), "d");
+		OutputProduct product2 =  new OutputProduct("as", "fb", "2", new Price("usd", "109"), "dg");
+		ArrayList<OutputProduct> productList = new ArrayList<OutputProduct>();
+		productList.add(product1);
+		productList.add(product2);
+		Products products = new Products();
+		products.setProductList(productList);
+
+		// create JAXB context and instantiate marshaller
+	    JAXBContext context = JAXBContext.newInstance(Products.class);
+	    Marshaller m = context.createMarshaller();
+	    m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+	    // Write to System.out
+	    m.marshal(products, System.out);
 	}
 }
